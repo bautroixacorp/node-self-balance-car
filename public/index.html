@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bảng điều khiển</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/js/index.js"></script>
+</head>
+
+<body onload="onload()">
+    <div id="tab-container">
+        <button id="control-tabbtn" class="button-bar button-BL tabbtn" tab="control"
+            onclick="openTab(this, 'control')">Điều
+            khiển</button>
+        <button id="route-tabbtn" class="button-bar button-BR tabbtn" tab="route" onclick="openTab(this, 'route')">Đặt
+            lộ
+            trình</button>
+    </div>
+
+    <div id="control" class="tabcontent">
+        <div class="robot-figure">
+
+        </div>
+
+        <button class="button-circle button-U control-btn">W</button>
+        <br />
+        <button class="button-circle button-L control-btn">A</button>
+        <button class="button-circle button-D control-btn">S</button>
+        <button class="button-circle button-R control-btn">D</button>
+    </div>
+    <div id="route" class="tabcontent">
+        <textarea class="route-input"></textarea><br />
+        <button class="button-bar-mini button-SELECT">CHẠY</button>
+        <button class="button-bar-mini button-SELECT">DỪNG</button>
+    </div>
+</body>
+
+</html>
