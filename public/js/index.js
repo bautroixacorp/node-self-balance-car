@@ -40,8 +40,7 @@ $(document).ready(function () {
 });
 
 // keyboard.js
-var key_interval;
-var key_called = false;
+
 function keyDownAction(keyCode) {
     var $btnASDW = null;
     switch (keyCode) {
@@ -50,7 +49,9 @@ function keyDownAction(keyCode) {
         case 68: $btnASDW = $(".button-R"); break;//D
         case 87: $btnASDW = $(".button-U"); break;//W
     }
-    $btnASDW.addClass("active");
+    if ($btnASDW != null) {
+        $btnASDW.addClass("active");
+    }
 }
 function keyUpAction(keyCode) {
     var $btnASDW = null;
@@ -60,8 +61,10 @@ function keyUpAction(keyCode) {
         case 68: $btnASDW = $(".button-R"); break;//D
         case 87: $btnASDW = $(".button-U"); break;//W
     }
-    $btnASDW.removeClass("active");
-    $btnASDW.trigger("click");
+    if ($btnASDW != null) {
+        $btnASDW.removeClass("active");
+        $btnASDW.trigger("click");
+    }
 }
 function keyPressHandler() {
     $(document).on('keydown', function (e) {
