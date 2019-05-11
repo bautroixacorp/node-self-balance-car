@@ -14,8 +14,9 @@ app.get('/', function (req, res) {
 // socket-connection
 io.on('connection', function (socket) {
     console.log('CONNECTED!');
-    socket.on('control', function (direction) {
-        console.log('control: ' + direction);
+    socket.on('send-control', function (direction) {
+        socket.broadcast.emit('receive-control', direction);
+        console.log('send-control: ' + direction);
     });
     socket.on('disconnect', function () {
         console.log('DISCONNECTED!');

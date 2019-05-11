@@ -26,14 +26,15 @@ function openTab(evt, tabName) {
 }
 
 $(document).ready(function () {
+    var socket = io();
     keyPressHandler();
 
     console.log("ready!");
-    var socket = io();
+    
     $('.button-circle').click(function (e) {
         e.preventDefault(); // prevents page reloading
         let directionCode = $(this)[0].innerHTML;
-        socket.emit('control', directionCode);
+        socket.emit('send-control', directionCode);
         console.log(`CONTROL DIRECTION: ${directionCode} sent!`);
         return false;
     });
@@ -42,7 +43,7 @@ $(document).ready(function () {
 // keyboard.js
 
 function keyDownAction(keyCode) {
-    var $btnASDW = null;
+    let $btnASDW = null;
     switch (keyCode) {
         case 65: $btnASDW = $(".button-L"); break;//A
         case 83: $btnASDW = $(".button-D"); break;//S
@@ -54,7 +55,7 @@ function keyDownAction(keyCode) {
     }
 }
 function keyUpAction(keyCode) {
-    var $btnASDW = null;
+    let $btnASDW = null;
     switch (keyCode) {
         case 65: $btnASDW = $(".button-L"); break;//A
         case 83: $btnASDW = $(".button-D"); break;//S
@@ -62,6 +63,7 @@ function keyUpAction(keyCode) {
         case 87: $btnASDW = $(".button-U"); break;//W
     }
     if ($btnASDW != null) {
+        $("#route-textarea").val($("#route-textarea").val()+$btnASDW[0].innerHTML);
         $btnASDW.removeClass("active");
         $btnASDW.trigger("click");
     }
