@@ -14,9 +14,22 @@ app.get('/', function (req, res) {
 // socket-connection
 io.on('connection', function (socket) {
     console.log('CONNECTED!');
-    socket.on('send-control', function (direction) {
-        socket.broadcast.emit('receive-control', direction);
-        console.log('send-control: ' + direction);
+    socket.on('front-control', function (direction) {
+        socket.broadcast.emit('back-control', direction);
+        console.log('back-control: ' + direction);
+    });
+    socket.on('front-control-start', function (direction) {
+        socket.broadcast.emit('back-control-start', direction);
+        console.log('back-control-start ' + direction);
+    });
+    socket.on('front-control-end', function (direction) {
+        socket.broadcast.emit('back-control-end', direction);
+        console.log('back-control-end: ' + direction);
+    });
+    socket.on('front-route', function (route) {
+        socket.broadcast.emit('back-route', route);
+        console.log('back-route: ' + route);
+
     });
     socket.on('disconnect', function () {
         console.log('DISCONNECTED!');

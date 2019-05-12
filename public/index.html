@@ -10,6 +10,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="/js/index.js"></script>
+    <script src="/js/ui.js"></script>
 </head>
 
 <body onload="onload()">
@@ -23,22 +24,22 @@
     </div>
 
     <div id="control" class="tabcontent">
-        <div class="robot-figure">
+        <!-- <div class="robot-figure">
 
-        </div>
+        </div> -->
     </div>
     <div id="route" class="tabcontent">
-        <textarea id="route-textarea" class="route-input"></textarea><br />
-        <br />
-        <button class="button-bar-mini button-SELECT">CHẠY</button>
-        <button class="button-bar-mini button-SELECT">DỪNG</button>
+        <textarea id="route-textarea" class="route-input" disabled></textarea><br />
+        <button id="run-btn" onclick="runRoute()" class="button-bar-mini button-SELECT">CHẠY</button>
+        <button id="stop-btn" onclick="stopRoute()" class="button-bar-mini button-SELECT">DỪNG</button>
+        <button id="clear-btn" onclick="inputClear()" class="button-bar-mini button-SELECT">XOÁ</button>
     </div>
-    <div id="button-asdw">
-        <button class="button-circle button-U control-btn">W</button>
+    <div id="ctrl-btn-group">
+        <button keyCode="65" class="button-circle button-U control-btn">W</button>
         <br />
-        <button class="button-circle button-L control-btn">A</button>
-        <button class="button-circle button-D control-btn">S</button>
-        <button class="button-circle button-R control-btn">D</button>
+        <button keyCode="83" class="button-circle button-L control-btn">A</button>
+        <button keyCode="68" class="button-circle button-D control-btn">S</button>
+        <button keyCode="87" class="button-circle button-R control-btn">D</button>
     </div>
 </body>
 

@@ -166,5 +166,9 @@ button .arrow-down {
     border-color: #222;
     border-radius: 5px;
     width: 300px;
-    height: 300px;
+    height: 100px;
+}
+
+#ctrl-btn-group {
+  margin: 40px 0;
 }

@@ -1,47 +1,58 @@
-var tabs = ["control", "route"]
-
-function onload() {
-    // hide other tab
-    tabs.forEach((tab) => {
-        if (tab != tabs[0]) {
-            $("#" + tab).hide();
-        }
-    })
-    // first tab is active
-    $(`#${tabs[0]}-tabbtn`).addClass("active-tab-btn");
-}
-
-function openTab(evt, tabName) {
-    // hide other tab
-    tabs.forEach((tab) => {
-        if (tab != tabName) {
-            $("#" + tab).hide();
-            $("#" + tab + "-tabbtn").removeClass("active-tab-btn");
-        }
-    })
-    // show tab and set active
-    $("#" + tabName).show();
-    $(evt).addClass("active-tab-btn");
-
-}
+var socket = null;
+var lastKeyCode = 0;
+var lastMouseClick = false;
 
 $(document).ready(function () {
-    var socket = io();
-    keyPressHandler();
-
+    socket = io();
     console.log("ready!");
-    
-    $('.button-circle').click(function (e) {
-        e.preventDefault(); // prevents page reloading
+
+    // $('.button-circle').click(function (e) {
+    //     e.preventDefault(); // prevents page reloading
+    //     let directionCode = $(this)[0].innerHTML;
+    //     socket.emit('front-control', directionCode);
+    //     console.log(`CONTROL DIRECTION: ${directionCode} sent!`);
+    //     return false;
+    // });
+
+    $('.button-circle').on('mousedown', function () {
+        lastMouseClick = true;
+
         let directionCode = $(this)[0].innerHTML;
-        socket.emit('send-control', directionCode);
-        console.log(`CONTROL DIRECTION: ${directionCode} sent!`);
-        return false;
+        socket.emit('front-control-start', directionCode);
+        console.log(`CONTROL START: ${directionCode} sent!`);
+    }).on('mouseup', function () {
+        let directionCode = $(this)[0].innerHTML;
+        socket.emit('front-control-end', directionCode);
+        console.log(`CONTROL END: ${directionCode} sent!`);
+    }).on('mouseleave', function () {
+        if (lastMouseClick) {
+            lastMouseClick = false;
+            let directionCode = $(this)[0].innerHTML;
+            socket.emit('front-control-end', directionCode);
+            console.log(`CONTROL END: ${directionCode} sent!`);
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        let keyCode = e.keyCode;
+        if (keyCode != lastKeyCode) {
+            keyDownAction(e.keyCode);
+            lastKeyCode = keyCode;
+        }
+    }).on('keyup', function (e) {
+        lastKeyCode = 0;
+        keyUpAction(e.keyCode);
     });
 });
 
-// keyboard.js
+function runRoute() {
+    socket.emit('front-route', $("#route-textarea").val());
+}
+function stopRoute() {
+    socket.emit('front-route', "stop");
+}
 
+// keyboard.js
 function keyDownAction(keyCode) {
     let $btnASDW = null;
     switch (keyCode) {
@@ -52,6 +63,8 @@ function keyDownAction(keyCode) {
     }
     if ($btnASDW != null) {
         $btnASDW.addClass("active");
+        let directionCode = $btnASDW[0].innerHTML;
+        socket.emit('front-control-start', directionCode);
     }
 }
 function keyUpAction(keyCode) {
@@ -63,15 +76,10 @@ function keyUpAction(keyCode) {
         case 87: $btnASDW = $(".button-U"); break;//W
     }
     if ($btnASDW != null) {
-        $("#route-textarea").val($("#route-textarea").val()+$btnASDW[0].innerHTML);
+        let directionCode = $btnASDW[0].innerHTML;
+        $("#route-textarea").val($("#route-textarea").val() + directionCode);
         $btnASDW.removeClass("active");
-        $btnASDW.trigger("click");
+        socket.emit('front-control-end', directionCode);
+        //$btnASDW.trigger("click");
     }
-}
-function keyPressHandler() {
-    $(document).on('keydown', function (e) {
-        keyDownAction(e.keyCode);
-    }).on('keyup', function (e) {
-        keyUpAction(e.keyCode);
-    });
 }
