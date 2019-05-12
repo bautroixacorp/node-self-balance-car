@@ -1,26 +1,28 @@
 var socket = null;
 var lastKeyCode = 0;
 var lastMouseClick = false;
+var directs = {
+    "W": "U",
+    "D": "R",
+    "S": "D",
+    "A": "L"
+};
 
 $(document).ready(function () {
     socket = io();
     console.log("ready!");
 
-    // $('.button-circle').click(function (e) {
-    //     e.preventDefault(); // prevents page reloading
-    //     let directionCode = $(this)[0].innerHTML;
-    //     socket.emit('front-control', directionCode);
-    //     console.log(`CONTROL DIRECTION: ${directionCode} sent!`);
-    //     return false;
-    // });
-
+    // mouse-click
     $('.button-circle').on('mousedown', function () {
         lastMouseClick = true;
 
+
         let directionCode = $(this)[0].innerHTML;
+        $("#route-textarea").val($("#route-textarea").val() + directs[directionCode]);
         socket.emit('front-control-start', directionCode);
         console.log(`CONTROL START: ${directionCode} sent!`);
     }).on('mouseup', function () {
+        lastMouseClick = false;
         let directionCode = $(this)[0].innerHTML;
         socket.emit('front-control-end', directionCode);
         console.log(`CONTROL END: ${directionCode} sent!`);
@@ -33,6 +35,7 @@ $(document).ready(function () {
         }
     });
 
+    // keypress
     $(document).on('keydown', function (e) {
         let keyCode = e.keyCode;
         if (keyCode != lastKeyCode) {
@@ -46,10 +49,13 @@ $(document).ready(function () {
 });
 
 function runRoute() {
-    socket.emit('front-route', $("#route-textarea").val());
+    let routeStr = $("#route-textarea").val();
+    console.log("ROUTE RUN: " + routeStr);
+    socket.emit('front-route', routeStr);
 }
 function stopRoute() {
     socket.emit('front-route', "stop");
+    console.log("ROUTE STOP");
 }
 
 // keyboard.js
@@ -64,6 +70,7 @@ function keyDownAction(keyCode) {
     if ($btnASDW != null) {
         $btnASDW.addClass("active");
         let directionCode = $btnASDW[0].innerHTML;
+        console.log(`CONTROL START: ${directionCode} sent!`);
         socket.emit('front-control-start', directionCode);
     }
 }
@@ -77,9 +84,9 @@ function keyUpAction(keyCode) {
     }
     if ($btnASDW != null) {
         let directionCode = $btnASDW[0].innerHTML;
-        $("#route-textarea").val($("#route-textarea").val() + directionCode);
+        $("#route-textarea").val($("#route-textarea").val() + directs[directionCode]);
         $btnASDW.removeClass("active");
+        console.log(`CONTROL END: ${directionCode} sent!`);
         socket.emit('front-control-end', directionCode);
-        //$btnASDW.trigger("click");
     }
 }
