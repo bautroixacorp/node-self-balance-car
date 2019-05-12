@@ -1,4 +1,4 @@
-const socket = io('http://localhost:3000');
+const socket = io();
 var lastKeyCode = 0;
 var lastMouseClick = false;
 var directs = {
