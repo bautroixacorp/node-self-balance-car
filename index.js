@@ -18,6 +18,7 @@ io.on('connection', function (socket) {
     //ping
     let outPing = setTimeout(() => { }, 0);
     socket.on('ping', function (v) {
+        clearTimeout(outPing);
         console.log("PING");
         io.sockets.emit('ping-robot', Date.now());
         outPing = setTimeout(() => {
