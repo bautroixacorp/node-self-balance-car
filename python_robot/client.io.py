@@ -1,8 +1,9 @@
 import socketio
+import time
 import robot
 
 sio = socketio.Client()
-sio.connect('https://uet1602.herokuapp.com')
+sio.connect('http://uet1602.herokuapp.com')
 
 robot.init()
 directs = ['', 'W', 'D', 'S', 'A']
@@ -10,6 +11,10 @@ directs = ['', 'W', 'D', 'S', 'A']
 @sio.on('connect')
 def on_connect():
     print('I\'m connected!')
+
+@sio.on('ping-robot')
+def on_ping(server_timestamp):
+    sio.emit('ping-res', str(int(time.time())*1000-int(server_timestamp)))
 
 @sio.on('back-control')
 def on_message(direct):

@@ -1,4 +1,4 @@
-var socket = null;
+const socket = io('http://localhost:3000');
 var lastKeyCode = 0;
 var lastMouseClick = false;
 var directs = {
@@ -8,9 +8,22 @@ var directs = {
     "A": "L"
 };
 
+function pingRes() {
+    socket.emit('ping-res', 0);
+}
+
 $(document).ready(function () {
-    socket = io();
     console.log("ready!");
+
+
+    socket.on('ping-value', function (value) {
+        if (!isNaN(value)){
+            $("#ping-value").html("Ping: "+value+ "ms");
+        } else {
+            $("#ping-value").html("OFFLINE");
+        }
+        
+    });
 
     // mouse-click
     $('.button-circle').on('mousedown', function () {
