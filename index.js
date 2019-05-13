@@ -29,7 +29,7 @@ io.on('connection', function (socket) {
 
     socket.on('ping-res', function (ping) {
         clearTimeout(outPing);
-        io.sockets.emit('ping-value', ping);
+        io.sockets.emit('ping-value', Date.now()-ping);
         pingTimeout = setTimeout(() => {
             io.sockets.emit('ping-robot', Date.now());
             outPing = setTimeout(() => {

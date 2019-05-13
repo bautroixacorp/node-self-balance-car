@@ -14,7 +14,7 @@ def on_connect():
 
 @sio.on('ping-robot')
 def on_ping(server_timestamp):
-    sio.emit('ping-res', str(int(time.time())*1000-int(server_timestamp)))
+    sio.emit('ping-res', server_timestamp)
 
 @sio.on('back-control')
 def on_message(direct):
