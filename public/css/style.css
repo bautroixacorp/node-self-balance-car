@@ -172,3 +172,14 @@ button .arrow-down {
 #ctrl-btn-group {
   margin: 40px 0;
 }
+
+#camera-view {
+  margin: 20px auto;
+  border: solid 1px;
+  min-height: 180px;
+  width: 300px;
+}
+
+#camera-image {
+  min-width: 300px;
+}

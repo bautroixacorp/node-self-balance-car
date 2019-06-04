@@ -14,6 +14,7 @@ app.get('/', function (req, res) {
 // socket-connection
 io.on('connection', function (socket) {
     console.log('CONNECTED!');
+    // io.sockets.emit('cam-on', true);
 
     //ping
     let outPing = setTimeout(() => { }, 0);
@@ -24,6 +25,16 @@ io.on('connection', function (socket) {
         outPing = setTimeout(() => {
             io.sockets.emit('ping-value', 'OFFLINE');
         }, 5000);
+    });
+
+    socket.on('wcam', function (img64) {
+        //console.log(img64);
+        io.sockets.emit('livecam', img64);
+    });
+
+    socket.on('turn-on-camera', function (onOFF) {
+        console.log(`Turn ${onOFF?'on':'off'} Camera`);
+        io.sockets.emit('back-turn-camera-on', onOFF);
     });
 
 

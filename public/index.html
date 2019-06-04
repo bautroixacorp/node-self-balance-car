@@ -14,6 +14,10 @@
 </head>
 
 <body onload="onload()">
+    <div id="camera-view">
+        <img id="camera-image" />
+    </div>
+
     <div id="tab-container">
         <button id="control-tabbtn" class="button-bar button-BL tabbtn" tab="control"
             onclick="openTab(this, 'control')">Điều
@@ -43,6 +47,8 @@
     </div>
     <div id="robot-ping"><span id="ping-value">OFFLINE</span></div>
     <button id="ping-btn" onclick="pingRes()" class="button-bar-mini button-SELECT">PING ROBOT</button>
+    <button id="ping-btn" onclick="turnOnCam(true)" class="button-bar-mini button-SELECT">BẬT CAMERA</button>
+    <button id="ping-btn" onclick="turnOnCam(false)" class="button-bar-mini button-SELECT">TẮT CAMERA</button>
 </body>
 
 </html>

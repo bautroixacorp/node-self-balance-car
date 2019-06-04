@@ -9,13 +9,16 @@ var directs = {
 };
 
 function pingRes() {
-    socket.emit('ping-res', 0);
+    socket.emit('ping-res', Date.now());
+}
+function turnOnCam(onOFF) {
+    socket.emit('turn-on-camera', onOFF);
 }
 
 $(document).ready(function () {
     console.log("ready!");
 
-
+    // ping
     socket.on('ping-value', function (value) {
         if (!isNaN(value)){
             $("#ping-value").html("Ping: "+value+ "ms");
@@ -23,6 +26,10 @@ $(document).ready(function () {
             $("#ping-value").html("OFFLINE");
         }
         
+    });
+    // live-camera
+    socket.on('livecam', function (img64) {
+        $("#camera-image").attr("src",`data:image/jpeg;base64,${img64}`);        
     });
 
     // mouse-click
