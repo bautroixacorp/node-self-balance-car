@@ -8,6 +8,8 @@ var directs = {
     "A": "L"
 };
 
+var robotIDs = [];
+
 function pingRes() {
     socket.emit('web-ping', Date.now());
 }
@@ -27,17 +29,24 @@ function configAdd(varName) {
 
 $(document).ready(function () {
     console.log("ready!");
+    socket.emit(`web-join`, '');
+
+    socket.on('connect', function () {
+        console.log("reconnected");
+        socket.emit(`web-join`, '');
+    });
 
     // ping
     socket.on('web-res-ping-value', function (value) {
         let values = value.split(":");
+        robotIDs[values[0]] = true;
         if ($(`#ping-value-${values[0]}`).length == 0) { //not found
-            $('#ping-group').append(`<div id="${`ping-value-${values[0]}`}">${"Ping " + values[0] + " : " + values[1] + "ms"}</div>`);
+            $('#ping-group').append(`<div id="${`ping-value-${values[0]}`}">${"Robot" + Object.keys(robotIDs).indexOf(values[0]) + " ping : " + values[1] + "ms"}</div>`);
         } else {
             if (!isNaN(values[1])) {
-                $(`#ping-value-${values[0]}`).html("Ping " + values[0] + " : " + values[1] + "ms");
+                $(`#ping-value-${values[0]}`).html("Robot" + Object.keys(robotIDs).indexOf(values[0]) + " ping : " + values[1] + "ms");
             } else {
-                $(`#ping-value-${values[0]}`).html(`Robot ${values[0]} is OFFLINE`);
+                $(`#ping-value-${values[0]}`).remove();
             }
         }
     });
