@@ -9,27 +9,41 @@ var directs = {
 };
 
 function pingRes() {
-    socket.emit('ping-res', Date.now());
+    socket.emit('web-ping', Date.now());
 }
 function turnOnCam(onOFF) {
-    socket.emit('turn-on-camera', onOFF);
+    socket.emit('web-control-camera', onOFF);
+}
+function configMinus(varName) {
+    let curVal = parseInt($(`#${varName}-value`).html());
+    $(`#${varName}-value`).html(curVal - 1);
+    socket.emit(`web-config`, `${varName}${curVal - 1}`);
+}
+function configAdd(varName) {
+    let curVal = parseInt($(`#${varName}-value`).html());
+    $(`#${varName}-value`).html(curVal + 1);
+    socket.emit(`web-config`, `${varName}${curVal + 1}`);
 }
 
 $(document).ready(function () {
     console.log("ready!");
 
     // ping
-    socket.on('ping-value', function (value) {
-        if (!isNaN(value)){
-            $("#ping-value").html("Ping: "+value+ "ms");
+    socket.on('web-res-ping-value', function (value) {
+        let values = value.split(":");
+        if ($(`#ping-value-${values[0]}`).length == 0) { //not found
+            $('#ping-group').append(`<div id="${`ping-value-${values[0]}`}">${"Ping " + values[0] + " : " + values[1] + "ms"}</div>`);
         } else {
-            $("#ping-value").html("OFFLINE");
+            if (!isNaN(values[1])) {
+                $(`#ping-value-${values[0]}`).html("Ping " + values[0] + " : " + values[1] + "ms");
+            } else {
+                $(`#ping-value-${values[0]}`).html(`Robot ${values[0]} is OFFLINE`);
+            }
         }
-        
     });
     // live-camera
-    socket.on('livecam', function (img64) {
-        $("#camera-image").attr("src",`data:image/jpeg;base64,${img64}`);        
+    socket.on('web-livecam', function (img64) {
+        $("#camera-image").attr("src", `data:image/jpeg;base64,${img64}`);
     });
 
     // mouse-click
@@ -39,18 +53,18 @@ $(document).ready(function () {
 
         let directionCode = $(this)[0].innerHTML;
         $("#route-textarea").val($("#route-textarea").val() + directs[directionCode]);
-        socket.emit('front-control-start', directionCode);
+        socket.emit('web-control-start', directionCode);
         console.log(`CONTROL START: ${directionCode} sent!`);
     }).on('mouseup', function () {
         lastMouseClick = false;
         let directionCode = $(this)[0].innerHTML;
-        socket.emit('front-control-end', directionCode);
+        socket.emit('web-control-end', directionCode);
         console.log(`CONTROL END: ${directionCode} sent!`);
     }).on('mouseleave', function () {
         if (lastMouseClick) {
             lastMouseClick = false;
             let directionCode = $(this)[0].innerHTML;
-            socket.emit('front-control-end', directionCode);
+            socket.emit('web-control-end', directionCode);
             console.log(`CONTROL END: ${directionCode} sent!`);
         }
     });
@@ -71,10 +85,10 @@ $(document).ready(function () {
 function runRoute() {
     let routeStr = $("#route-textarea").val();
     console.log("ROUTE RUN: " + routeStr);
-    socket.emit('front-route', routeStr);
+    socket.emit('web-route', routeStr);
 }
 function stopRoute() {
-    socket.emit('front-route', "stop");
+    socket.emit('web-route', "stop");
     console.log("ROUTE STOP");
 }
 
@@ -91,7 +105,7 @@ function keyDownAction(keyCode) {
         $btnASDW.addClass("active");
         let directionCode = $btnASDW[0].innerHTML;
         console.log(`CONTROL START: ${directionCode} sent!`);
-        socket.emit('front-control-start', directionCode);
+        socket.emit('web-control-start', directionCode);
     }
 }
 function keyUpAction(keyCode) {
@@ -107,6 +121,6 @@ function keyUpAction(keyCode) {
         $("#route-textarea").val($("#route-textarea").val() + directs[directionCode]);
         $btnASDW.removeClass("active");
         console.log(`CONTROL END: ${directionCode} sent!`);
-        socket.emit('front-control-end', directionCode);
+        socket.emit('web-control-end', directionCode);
     }
 }

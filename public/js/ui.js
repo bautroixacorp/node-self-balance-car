@@ -1,4 +1,4 @@
-var tabs = ["control", "route"];
+const tabs = ["control", "route", "config"];
 
 function onload() {
     // hide other tab
@@ -25,6 +25,6 @@ function openTab(evt, tabName) {
 
 }
 
-function inputClear(){
+function inputClear() {
     $("#route-textarea").val("");
 }
