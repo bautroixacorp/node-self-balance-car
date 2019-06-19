@@ -16,12 +16,14 @@ directs = ['', 'W', 'D', 'S', 'A']
 # FPS = 10.0
 
 # vcap = cv2.VideoCapture(0)
-
 # print("Connect webcam ok")
+
+sio.emit('robot-res-join', '')
 
 @sio.on('connect')
 def on_connect():
     print('I\'m connected!')
+    sio.emit('robot-res-join', '')
 
 # STREAM PING
 @sio.on('robot-ping')

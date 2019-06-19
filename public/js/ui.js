@@ -1,4 +1,4 @@
-const tabs = ["control", "route", "config"];
+const tabs = ["config", "route"];
 
 function onload() {
     // hide other tab

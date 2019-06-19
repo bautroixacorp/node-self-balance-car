@@ -92,7 +92,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
-        console.log("\x1b[41m",`${clientID} is DISCONNECTED!`);
+        console.log("\x1b[31m",`${clientID} is DISCONNECTED!`);
     });
 });
 
